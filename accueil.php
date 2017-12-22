@@ -7,16 +7,31 @@ $requete->execute();
 $infouser=$requete->fetch();
 
 //Si l'utilisateur n'a pas de photo
-        if($infouser['profilpic'] == null){
-            $infouser['profilpic']='images\Profil\user-icon.png';
-        }
+
         $_SESSION['pic']=$infouser['profilpic'];
         $_SESSION['nom']=$infouser['nom'];
         $_SESSION['prenom']=$infouser['prenom'];
         $_SESSION['adresse']=$infouser['adresse'];
         $_SESSION['birth']=$infouser['birth'];
-        $_SESSION['coordonnee']=$infouser['coordonnee'];
         $_SESSION['contact']=$infouser['contact'];
+        $_SESSION['coordonnee'] = $infouser['coordonnee'];
+        if($infouser['coordonnee']){
+            $infolieu = explode(";", $infouser['coordonnee']);
+            $_SESSION['adresse'] = $infolieu[0];
+            $_SESSION['postal'] = $infolieu[1];
+            $_SESSION['ville'] = $infolieu[2];
+        }
+$requete->CloseCursor();
+
+            $requete2=$dbh->prepare('SELECT * from images WHERE ID=:ID');
+            $requete2->bindParam(':ID',$_SESSION['id']);
+            $requete2->execute();
+            $infopic=$requete2->fetch();
+            $chemin=$infopic['Chemin'];
+            if($chemin == null){
+                $chemin='images\Profil\user-icon.png';
+            }
+            $_SESSION['pic']=$chemin;
       ?>
 
 <!DOCTYPE html>

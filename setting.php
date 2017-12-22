@@ -1,6 +1,78 @@
 <?php 
 session_start();
+if(isset($_POST['newnom']) && !empty($_POST['newnom'])){
+    include 'includes/connexionBDD.php';
+    $newnom = $_POST['newnom'];
+    $nom_requete = $dbh ->prepare('UPDATE utilisateurs SET nom=:nom WHERE id=:id');
+    $nom_requete->bindParam(':nom',$newnom);
+    $nom_requete->bindParam(':id',$_SESSION['id']); 
+    $nom_requete->execute();
+    $_SESSION['nom']=$newnom;
+    header('Location: setting.php');
+    
+}
+
+if(isset($_POST['newprenom']) && !empty($_POST['newprenom'])){
+    include 'includes/connexionBDD.php';
+    $newprenom = $_POST['newprenom'];
+    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET prenom=:prenom WHERE id=:id');
+    $pre_requete->bindParam(':prenom',$newprenom);
+    $pre_requete->bindParam(':id',$_SESSION['id']); 
+    $pre_requete->execute();
+    $_SESSION['prenom']=$newprenom;
+    header('Location: setting.php');  
+}
+
+if(isset($_POST['jour']) && !empty($_POST['jour'])||isset($_POST['mois']) && !empty($_POST['mois']) || isset($_POST['mois']) && !empty($_POST['newprenom'])){
+    include 'includes/connexionBDD.php';
+    $newjour = $_POST['jour'];
+    $newmois = $_POST['mois'];
+    $newannee = $_POST['annee'];
+    $birth=$newjour.';'.$newmois.';'.$newannee;
+    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET birth=:birth WHERE id=:id');
+    $pre_requete->bindParam(':birth',$birth);
+    $pre_requete->bindParam(':id',$_SESSION['id']); 
+    $pre_requete->execute();
+    header('Location: setting.php');  
+}
+
+if(isset($_POST['newprenom']) && !empty($_POST['newprenom'])){
+    include 'includes/connexionBDD.php';
+    $newprenom = $_POST['newprenom'];
+    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET prenom=:prenom WHERE id=:id');
+    $pre_requete->bindParam(':prenom',$newprenom);
+    $pre_requete->bindParam(':id',$_SESSION['id']); 
+    $pre_requete->execute();
+    $_SESSION['prenom']=$newprenom;
+    header('Location: setting.php');  
+}
+
+if(isset($_POST['adresse']) && !empty($_POST['adresse'])){
+    if(isset($_POST['postal']) && !empty($_POST['postal'])){
+            if(isset($_POST['ville']) && !empty($_POST['ville'])){
+                    include 'includes/connexionBDD.php';
+                    $_SESSION['adresse'] = $_POST['adresse'];
+                    $_SESSION['postal'] = $_POST['postal'];
+                    $_SESSION['ville'] = $_POST['ville'];
+                    $coord=$_SESSION['adresse'].";". $_SESSION['postal'].";".$_SESSION['ville'];
+                    $requete = $dbh ->prepare('UPDATE utilisateurs SET coordonnee=:coord WHERE id=:id');
+                    $requete->bindParam(':coord',$coord);
+                    $requete->bindParam(':id',$_SESSION['id']); 
+                    $requete->execute();
+                    $_SESSION['coordonnee']=$coord;
+                    header('Location: setting.php');  
+            }
+    }
+}
+
+if(isset($_FILES['image']) && !empty($_FILES['image'])){
+    include 'upload_image.php';
+}
+
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,7 +139,12 @@ session_start();
             <div class="ui equal width aligned grid">
               <div class="row">
                 <div class="column my-img">
-                  <img class="ui small circular image" src="<?php echo $_SESSION['pic'];?>" 0le="z-index:1000;">
+                <form method="POST" enctype="multipart/form-data">
+                  <img class="ui small circular image imgclick" src="<?php echo $_SESSION['pic'];?>" 0le="z-index:1000;">
+                  <input type="file" name="image" id="upload-photo" />
+                  <br>
+                  <button class="ui primary button centered" type="submit">Modifier photo</button>
+                </form>
                 </div>
                 <div class="column profil">
                     <form method="POST">
@@ -75,62 +152,94 @@ session_start();
                       <div class="fields">
                         <div class="field">
                           <label>Nom:</label>
-                          <input type="text"  style="color:black" value="<?php echo $_SESSION['nom']; ?>">
+                          <input type="text"  name="newnom" style="color:black" value="<?php echo $_SESSION['nom']; ?>">
                         </div>
                         <div class="field">
                           <label>Prénom:</label>
-                          <input type="text" style="color:black" value="<?php echo $_SESSION['prenom']; ?>">
+                          <input type="text" name= "newprenom" style="color:black" value="<?php echo $_SESSION['prenom'];?>">
                         </div>
                       </div>
-                      <div class="inline fields birth">
-                        <label>Date de naissance</label>
+                      <div class="fields birth">    
                         <div class="field">
-                            <select class="ui dropdown">
-                              <option value="">Jour</option>
-                              <?php
-                                for($i=0;$i<32;$i++){
-                                ?>
-                              <option value="<?php echo $i; ?>"><?php echo $i;?></option>
-                              <?php  } ?>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <select class="ui dropdown">
-                              <option value="">Mois</option>
-                              <option value="Janvier">Janvier</option>
-                              <option value="Février">Février</option>
-                              <option value="Mars">Mars</option>
-                              <option value="Avril">Avril</option>
-                              <option value="Mai">Mai</option>
-                              <option value="Juin">Juin</option>
-                              <option value="Juillet">Juillet</option>
-                              <option value="Août">Août</option>
-                              <option value="Septembre">Septembre</option>
-                              <option value="Octobre">Octobre</option>
-                              <option value="Novembre">Novembre</option>
-                              <option value="Décembre">Décembre</option>                                         
-                            </select>
-                        </div>
-                        <div class="field">
-                            <select class="ui dropdown">
-                              <option value="">Année</option>
-                              <?php
-                                for($i=1900;$i<2018;$i++){
-                                ?>
-                              <option value="<?php echo $i; ?>"><?php echo $i;?></option>
-                              <?php  } ?>
-                            </select>                                    
-                            
+                            <table>
+                        <tr>
+                            <label>Date de naissance:</label>
+                        </tr>
+                         <tr>
+                             <td>
+                                <select name="jour" class="ui dropdown">
+                                  <option value="">Jour</option>
+                                  <?php
+                                    for($i=0;$i<32;$i++){
+                                    ?>
+                                  <option value="<?php echo $i; ?>"><?php echo $i;?></option>
+                                  <?php  } ?>
+                                </select>
+                             </td>
+                             <td>
+                                    <select name="mois" class="ui dropdown" style="width=300px;">
+                                      <option value="">Mois</option>
+                                      <option value="Janvier">Janvier</option>
+                                      <option value="Février">Février</option>
+                                      <option value="Mars">Mars</option>
+                                      <option value="Avril">Avril</option>
+                                      <option value="Mai">Mai</option>
+                                      <option value="Juin">Juin</option>
+                                      <option value="Juillet">Juillet</option>
+                                      <option value="Août">Août</option>
+                                      <option value="Septembre">Septembre</option>
+                                      <option value="Octobre">Octobre</option>
+                                      <option value="Novembre">Novembre</option>
+                                      <option value="Décembre">Décembre</option>                                         
+                                    </select> 
+                             </td>
+                             <td>
+                                <div class="field">
+                                    <select name="annee" class="ui dropdown">
+                                      <option value="">Année</option>
+                                      <?php
+                                        for($i=1900;$i<2018;$i++){
+                                        ?>
+                                      <option value="<?php echo $i; ?>"><?php echo $i;?></option>
+                                      <?php  } ?>
+                                    </select>    
+                                </div>
+                             </td>
+                         </tr>
+                     </table>
+                        
                         </div>
                       </div>
+                      <button class="ui green button centered" type="submit">Modifier</button>
+                      
                     </div>
                     </form>
+                    <br>
                 </div>
               </div>
             </div>
         </div>
-        <div class="ui bottom attached tab segment" data-tab="second">
-          sdfsdfsdf
+        <div class="ui bottom attached tab segment " data-tab="second"> 
+            <form class = "ui form coord" method="POST">
+            <div class="ui equal width center aligned padded grid">
+              <div class="row">
+                <div class="column">
+                      
+                       <label>Adresse:</label>
+                        <input type="text" placeholder="Adresse" name="adresse" value="<?php echo $_SESSION['adresse'];?>">
+                        <label>Code Postal:</label>
+                        <input type="text" placeholder="Code postal" name="postal" value="<?php echo $_SESSION['postal']; ?>">
+                        <label>Ville:</label> 
+                        <input type="text" placeholder="Ville" name ="ville" value="<?php echo $_SESSION['ville']; ?>">  
+                              
+                       
+                </div>
+                <div class="column left-coord">
+                   <button class="ui green button" type="submit">Modifier</button>  
+                </div>
+              </div>
+            </div>
+       </form> 
         </div>
         <div class="ui bottom attached tab segment" data-tab="third">
           Third
@@ -158,3 +267,12 @@ $('.demo.sidebar')
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+

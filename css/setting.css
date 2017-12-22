@@ -57,7 +57,8 @@ hr{
 }
 .my-img{
     position: relative;
-    left:3%;
+    left:9%;
+    top:4%;
 }
 .profil{
     position: relative;
@@ -66,5 +67,19 @@ hr{
 }
 .birth{
     position: relative;
-    right:25%;
+    right:0%;
+}
+.left-coord{
+    position: relative;
+    top:40%;
+}
+.imgclick{
+    cursor: pointer;
+}
+#upload-photo {
+   opacity: 0.3;
+   position: relative;
+   left:5%;    
+    bottom:5%;
+   z-index: 0;
 }

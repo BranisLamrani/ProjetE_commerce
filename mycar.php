@@ -1,11 +1,6 @@
 <?php 
 session_start();
-include 'includes/connexionBDD.php';
-$requete=$dbh->prepare('SELECT * from utilisateurs WHERE ID=:ID');
-$requete->bindParam(':ID',$_SESSION['id'] ,PDO::PARAM_INT);
-$requete->execute();
-$infouser=$requete->fetch();
-      ?>
+ ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,10 +52,8 @@ $infouser=$requete->fetch();
           <hr> 
           </div>
      </div>
-           <div class="contenu box">
-                 
-                    
-           </div> 
+          
+    <?php include 'PutVehicule.php' ?>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
  <!--Bootstrap-->

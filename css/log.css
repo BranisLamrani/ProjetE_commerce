@@ -1,0 +1,75 @@
+body{
+    background-image: url(../images/wall1.jpg);
+    background-size:cover;
+    z-index:0;
+}
+.navbar{
+    height: 58px;
+}
+
+.maintitle{
+    font-size: 70px;
+    color:#E8CDCD;
+}
+.describe{
+    font-size: 30px;
+}
+
+.inscription
+{
+    background-color: transparent;
+    font-size: 22px;
+    margin: 50px 2px; /* déplacer le boutton*/
+    padding: 7px 32px;
+    color:white;  
+    border: 3px solid #4CAF50;
+    cursor: pointer;
+}
+
+.ui.modal.form{
+    position:relative;
+    bottom:10%;
+    padding:10px;
+    height: 350px;
+}
+
+.formulaire{
+    position: relative;
+    padding:40px;
+    left: 30%;
+    height:400px;   
+}
+
+.inputfile {
+	width: 40px;
+	height: 16px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+    margin: auto auto;
+}
+.btn-valid{
+    position: relative;
+    left: 40%;
+}
+
+.inputfile + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color:#FF4934;
+    display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: transparent;
+    border: 2px solid #FF4934;
+    color: #FF4934;
+}
+.inputfile + label {
+	cursor: pointer; /* "hand" cursor */
+}
+
+

@@ -1,0 +1,19 @@
+body{
+    
+    z-index:-1;
+
+}
+.cars{
+
+    background-color: beige;
+    z-index:0;
+    
+}
+.images{
+    height: 1250px;
+    width: 250px;
+}
+.carligne{
+    width:85%;
+    border-top: 2px solid;
+}

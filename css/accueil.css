@@ -1,0 +1,66 @@
+
+body{
+    background-image: url(../images/wall1.jpg);
+    background-size:cover;
+    z-index:0;
+    min-height:100%;
+    margin: 0;
+    padding: 0;
+    background-repeat: no-repeat;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.recherche{
+    position:relative;
+    top:40%;
+    left:40%;  
+}
+
+.mymenu{
+    height: 94vh;
+    width:14%;
+    background-color:#0D0C0C;
+    text-align: center;
+    color:white;
+    font-size:16px;
+    padding: 10px;
+    box-shadow: 5px 10px 8px #888888;
+}
+
+hr{
+    border-top: 1px solid darkgrey;
+    height: 3px;
+    width: 65%;
+}
+
+.liens{
+    position: relative;
+    top: 7%;
+}
+.contenu{
+    height:55vh;
+    z-index:1;
+    width: 84%;
+    margin-top: 1%;
+    margin-left:1%;
+    overflow: scroll;
+    overflow-x: hidden;
+    position: relative;
+    top:35%;
+}
+.box{
+    display: inline-block;
+    float: left;
+    z-index:2;
+}
+
+.searchbox{
+    position: relative;
+    left: 30%;
+    top:34%;
+    
+}
+.searchbar{  
+    width:300px;
+}

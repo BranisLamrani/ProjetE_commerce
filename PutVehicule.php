@@ -1,55 +1,17 @@
+<head>
+    <link rel="stylesheet" href="css/putvehicule.css">
+</head>
 <?php
-$errorMatricule=false;
-$errorMarque=false;
-$errorModele=false;
-$errorPrix=false;
-$errorImage=false;
-$sucessfull=false;
 $matricule='';
 $modele='';
 $marque='';
+$couleur='';
 $prix='';
 $categorie='';
-if(isset($_POST['matricule']) && !empty(trim($_POST['matricule']))){
-	$matricule=$_POST['matricule'];
-    
-}
-else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$errorMatricule=true ;
-}
-if(isset($_POST['marque']) && !empty(trim($_POST['marque']))){
-	$marque=$_POST['marque'];
-}
-else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$errorMarque=true ;
-}
-if(isset($_POST['modele']) && !empty(trim($_POST['modele']))){
-	$modele=$_POST['modele'];
-}
-else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$errorModele=true ;
-}
-if(isset($_POST['prix']) && !empty(trim($_POST['prix'])) && is_float($_POST['prix'])){
-	$prix=$_POST['prix'];
-}
-else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$errorPrix=true ;
-}
-if(isset($_POST['image']) && !empty(trim($_POST['image']))){
-	$image=$_POST['image'];
-}
-else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$errorImage=true ;
-}
-?>
-
-
-
-<?php
 $chemin_file='';
+$description='';
 $Errormessage='';
-if(isset($_POST['matricule'])&& isset($_POST['marque']) && isset($_POST['modele'])&&
-    isset($_POST['prix']) && isset($_POST['localisation']) ){
+if(!empty($_POST)){
     include 'includes/connexionBDD.php';
     if(!empty($_FILES['image'])){
         $repertory_image = "images/Vehicule/";
@@ -64,8 +26,7 @@ if(isset($_POST['matricule'])&& isset($_POST['marque']) && isset($_POST['modele'
             $chemin_file=$repertory_image.$newname;
             move_uploaded_file($imageNametmp,$chemin_file);
         }
-    }
-    if(filter_input(INPUT_POST, 'prix', FILTER_VALIDATE_INT) != false){
+       
             $matricule=$_POST['matricule'];
             $matricule=strtoupper($matricule);
         
@@ -75,6 +36,13 @@ if(isset($_POST['matricule'])&& isset($_POST['marque']) && isset($_POST['modele'
             for($i=1;$i<count($tabmarque);$i++){
                 $marque.=strtolower($tabmarque[$i]);
             }
+            $couleur=$_POST['couleur'];
+            $tabcouleur=str_split($couleur);
+            $couleur=strtoupper($tabcouleur[0]);
+            for($i=1;$i<count($tabcouleur);$i++){
+                $couleur.=strtolower($tabcouleur[$i]);
+            }
+        
         
             $modele=$_POST['modele'];
             $modele=strtoupper($modele);
@@ -84,138 +52,176 @@ if(isset($_POST['matricule'])&& isset($_POST['marque']) && isset($_POST['modele'
             $localisation=$_POST['localisation'];
             $tablocalisation=str_split($localisation);
             $localisation=strtoupper($tablocalisation[0]);
-            for($i=1;$i<count($localisation);$i++){
+            for($i=1;$i<count($tablocalisation);$i++){
                 $localisation.=strtolower($tablocalisation[$i]);
             }
-            
             $categorie=$_POST['categorie'];
+            $description=$_POST['description'];
             
-            $requete= $dbh->prepare('INSERT INTO vehicule(matricule,marque,modele,prixheure,localisation,image,categorie) 
-                                      VALUES(:matricule,:marque,:modele,:prix,:localisation,:image,:categorie)');
+            $requete= $dbh->prepare('INSERT INTO vehicule(matricule,marque,modele,couleur,prixheure,localisation,image,categorie,IDuser,description) 
+                                      VALUES(:matricule,:marque,:modele,:couleur,:prix,:localisation,:image,:categorie,:IDuser,:description)');
             $requete->execute(array(
                 'matricule' => $matricule,
                 'marque' => $marque,
                 'modele' => $modele,
+                'couleur' => $couleur,
                 'prix' => $prix,
                 'localisation' => $localisation,
                 'image' => $chemin_file,
-                'categorie' => $categorie
+                'categorie' => $categorie,
+                'IDuser'=>$_SESSION['id'],
+                ':description'=>$description
             ));
             $requete->closeCursor();
-            $errorMatricule=false;
-            $errorMarque=false;
-            $errorModele=false;
-            $errorPhoto=false;
-            $errorPrix=false;
-            $sucessfull=true;
-        }
+    }
     
-    $searchID= $dbh-> lastInsertId();
 }
 ?>
-<div class="ErreurMessage">
-<?php
-if($errorMatricule){
-    ?>
-    <div class="alert alert-danger" role="alert"> 
-Veuillez indiquer le numéro de matricule
-</div>
-<?php
- }
-?>
-         
-<?php
-if($errorMarque){
-	  ?>
-	  <div class="alert alert-danger" role="alert">
-  Veuillez indiquer la marque du véficule.
-</div>
-<?php
-  }
- ?>
-            
-           
-<?php
- if($errorModele){
-	  ?>
-	  <div class="alert alert-danger" role="alert">
-  Veuillez indiquez le modèle du véhicule
-</div>
-<?php
-  }
- ?>
- 
- <?php
- if($errorPrix){
-	  ?>
-	  <div class="alert alert-danger" role="alert">
-  Veuillez indiquez le prix du véhicule ou le prix indiqué n'est pas valide
-</div>
-<?php
-  }
- ?>	 
- <?php
- if($sucessfull){
-	  ?>
-	  <div class="alert alert-success" role="alert">
-  Le véhicule est enregistré et prêt à étre loué ! 
-</div>
-<?php
-  }
- ?>	 
-  </div>
-   
-   <form class="container" method="post" action="PutVehicule.php" enctype="multipart/form-data">
-  <div class="form-row">
-    <div class="form-group col-md-2">
-      <label >Marque:</label>
-      <input type="text" class="form-control" placeholder="Marque" name="marque">
-    </div>
-    <div class="form-group col-md-2">
-      <label>Modèle:</label>
-      <input type="text" class="form-control" placeholder="Modèle" name="modele">
-    </div>
-      <div class="form-group col-md-2">
-      <label>Couleur:</label>
-      <input type="text" class="form-control" placeholder="Optionnel" name="couleur">
-    </div>
-  </div>
-  <div class="form-row"> 
-      <div class="form-group col-md-2">
-        <label >Numéro de matriculation:</label>
-        <input type="text" class="form-control"  placeholder="Matriculation"  name="matricule">
-      </div>
-      <div class="form-group col-md-3">
-      <label for="inputCity">Localisation:</label>
-      <input type="text" class="form-control" id="inputCity" placeholder="Ville" name="localisation">
-    </div>
-  </div>
-  <div class="form-row">
-    
-    <div class="form-group col-md-4">
-      <label >Prix de location:</label>
-      <input type="text" class="form-control" placeholder="Prix en euro" name="prix">
-    </div>
-    <div class="form-group col-md-6">
-      <label>Photo du véhicule:</label>
+
+
+<div class="form-put">
+      <form class="ui form segment" method="post" enctype="multipart/form-data">
+        <p>Mettre un véhicule en vente</p>
+        <div class="two fields">
+          <div class="field">
+            <label>Marque</label>
+            <input placeholder="Marque" name="marque" type="text">
+          </div>
+          <div class="field">
+            <label>Modèle</label>
+            <input type="text" placeholder="Modèle" name="modele">
+          </div>
+        </div>
+        <div class="two fields">
+          <div class="field">
+            <label >Numéro de matriculation:</label>
+        <input type="text" placeholder="Matriculation"  name="matricule">
+          </div>
+          <div class="field">
+            <label for="inputCity">Localisation:</label>
+            <input type="text" id="inputCity" placeholder="Ville" name="localisation">
+          </div>
+        </div>
+        <div class="two fields">
+          <div class="field">
+             <label >Prix de location:</label>
+            <input type="text" placeholder="Prix en euro" name="prix">
+          </div>
+          <div class="field">
+            <label>Couleur:</label>
+             <input type="text" placeholder="Optionnel" name="couleur">
+          </div>
+        </div>
+          <div class="field">
+            <label>Catégorie</label>
+                <div id="categorie" class="ui selection dropdown" >
+                  <input name="categorie" type="hidden">
+                  <i class="dropdown icon"></i>
+                  <div class="default text">Optionnelle(Vous serez plus visible au près des autres membre si vous en choissisez 1.)</div>
+                  <div class="menu">
+                    <div class="item" data-value="Citadine">Citadine</div>
+                    <div class="item" data-value="Utilitaire">Utilitaire</div>
+                    <div class="item" data-value="Utilitaire">Utilitaire</div>
+                    <div class="item" data-value="Coupé">Coupé</div>
+                    <div class="item" data-value="4x4">4x4</div>
+                    <div class="item" data-value="Familliale">Familliale</div>
+                    <div class="item" data-value="Minibus">Minibus</div>
+                    <div class="item" data-value="Cabriolet">Cabriolet</div>
+                    <div class="item" data-value="Collection">Collection</div>
+                    <div class="item" data-value="Berline">Berline</div>
+                  </div>
+                </div>
+          </div>
+        <div class="field">
+            <label>Photo du véhicule:</label>
       <input type="file" class="form-control" name="image">
-    </div>
-  </div>
-  <div class="form-group col-md-2">
-    <label for="exampleFormControlSelect1">Catégorie</label>
-    <select class="form-control" name="categorie">
-      <option value="Optionnelle">Optionnelle</option>
-      <option value="Citadine">Citadine</option>
-      <option value="Utilitaire">Utilitaire</option>
-      <option value="Coupé">Coupé</option>
-      <option value="4x4">4x4</option>
-      <option value="Familliale">Familiale</option>
-      <option value="Minibus">Minibus</option>
-      <option value="Cabriolet">Cabriolet</option>
-      <option value="Collection">Collection</option>
-      <option value="Berline">Berline</option>
-    </select>
-  </div>
-  <button type="submit" class="btn btn-primary">Validation</button>
-  
-</form>
+        </div>
+        <div class="field">
+            <label>Description</label>
+      <textarea name="description" rows="2"></textarea>
+        </div>
+        <div class="ui primary submit button">Valider</div>
+        <div class="ui error message"></div>
+    </form>
+</div> 
+
+
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
+ <!--Bootstrap-->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+<!-- Semantic UI-->    
+<script src="framework/semantic/dist/semantic.min.js"></script>
+
+
+<script>
+    $('.ui.form')
+  .form({
+    fields: {
+      Marque: {
+        identifier: 'marque',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Entrer la marque du véhicule'
+          }
+        ]
+      },
+      Modele: {
+        identifier: 'modele',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Entrer le modèle du véhicule'
+          }
+        ]
+      },
+      Matriculation: {
+        identifier: 'matricule',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Entrez le numéro de matriculation'
+          }
+        ]
+      },
+      localisation: {
+        identifier: 'localisation',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Où se trouve le véhicule ? (Localisation)'
+          }
+        ]
+      },
+      Prix: {
+        identifier: 'prix',
+        rules: [
+          {
+            type   : 'integer',
+            prompt : 'Entrer le prix du véhicule'
+          },
+        ]
+      },
+      Photo: {
+        identifier: 'image',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Insérer une photo'
+          }
+        ]
+      }
+    }
+  })
+;
+</script>
+
+<script>
+  $('#categorie')
+    .dropdown()
+  ;
+</script>
+ 

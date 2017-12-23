@@ -21,6 +21,7 @@ session_start();
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Page d'accueil</title>
     <link rel="stylesheet" href="css/accueil.css">
+    <link rel="stylesheet" href="css/putvehicule.css">
 </head>
 <body>
   <nav class="navbar justify-content-between" style="background-color:#0D0C0C;">
@@ -29,6 +30,7 @@ session_start();
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Déconnexion</button>
   </form>
 </nav>
+      
 
       <div class="mymenu box">
           <img class="ui small centered circular image" src="<?php echo $_SESSION['pic'];?>" style="z-index:1000;">
@@ -52,8 +54,25 @@ session_start();
           <hr> 
           </div>
      </div>
-          
-    <?php include 'PutVehicule.php' ?>
+<div class="ui equal width center aligned padded grid ">
+    <div class="ui top attached tabular menu">
+      <a class="active item" data-tab="first">Mes véhicules en location</a>
+      <a class="item" data-tab="second">Mettre à louer</a>
+
+    </div>
+    <div class="ui bottom attached active tab segment" data-tab="first">
+    <?php include 'owncar.php'; ?>
+    </div>
+    <div class="ui bottom attached tab segment put-ve" data-tab="second" style="background-color:#0D0C0C;">
+
+        <div class="column">
+            <?php include 'PutVehicule.php' ?>
+        </div>
+      
+    </div>
+</div>
+
+    
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
  <!--Bootstrap-->
@@ -63,6 +82,31 @@ session_start();
 <!-- Semantic UI-->    
 <script src="framework/semantic/dist/semantic.min.js"></script>
 
+<script>
+    
+    $('.ui.modal.alertmodal')
+  .modal('attach events','.valid-btn','show')
+;
+</script>
+
+<script>
+$('.menu .item')
+  .tab()
+;    
+</script>
+
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

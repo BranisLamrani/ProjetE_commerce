@@ -65,7 +65,7 @@ if(isset($_POST['adresse']) && !empty($_POST['adresse'])){
     }
 }
 
-if(isset($_FILES['image']) && !empty($_FILES['image'])){
+if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
     include 'upload_image.php';
 }
 
@@ -141,7 +141,7 @@ if(isset($_FILES['image']) && !empty($_FILES['image'])){
                 <div class="column my-img">
                 <form method="POST" enctype="multipart/form-data">
                   <img class="ui small circular image imgclick" src="<?php echo $_SESSION['pic'];?>" 0le="z-index:1000;">
-                  <input type="file" name="image" id="upload-photo" />
+                  <input type="file" name="ownimage" id="upload-photo" />
                   <br>
                   <button class="ui primary button centered" type="submit">Modifier photo</button>
                 </form>

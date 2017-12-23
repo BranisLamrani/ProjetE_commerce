@@ -7,8 +7,7 @@ $requete->execute();
 $infouser=$requete->fetch();
 
 //Si l'utilisateur n'a pas de photo
-
-        $_SESSION['pic']=$infouser['profilpic'];
+       
         $_SESSION['nom']=$infouser['nom'];
         $_SESSION['prenom']=$infouser['prenom'];
         $_SESSION['adresse']=$infouser['adresse'];
@@ -21,6 +20,7 @@ $infouser=$requete->fetch();
             $_SESSION['postal'] = $infolieu[1];
             $_SESSION['ville'] = $infolieu[2];
         }
+        
 $requete->CloseCursor();
 
             $requete2=$dbh->prepare('SELECT * from images WHERE ID=:ID');
@@ -32,6 +32,12 @@ $requete->CloseCursor();
                 $chemin='images\Profil\user-icon.png';
             }
             $_SESSION['pic']=$chemin;
+$requete2->CloseCursor();
+        
+        //MON PANIER
+        $_SESSION['panier']=array();
+
+
       ?>
 
 <!DOCTYPE html>
@@ -55,6 +61,7 @@ $requete->CloseCursor();
     <link rel="stylesheet" href="css/accueil.css">
 </head>
 <body>
+ <?php echo $_SESSION['pic']; ?>
   <nav class="navbar justify-content-between" style="background-color:#0D0C0C;">
   <a class="navbar-brand sticky-top">VShare</a>
   <form method="POST" action="deconnexion.php" class="form-inline">

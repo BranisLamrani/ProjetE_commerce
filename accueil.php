@@ -23,12 +23,12 @@ $infouser=$requete->fetch();
         
 $requete->CloseCursor();
 
-            $requete2=$dbh->prepare('SELECT * from images WHERE ID=:ID');
+            $requete2=$dbh->prepare('SELECT * from images WHERE IDuser=:ID');
             $requete2->bindParam(':ID',$_SESSION['id']);
             $requete2->execute();
             $infopic=$requete2->fetch();
-            $chemin=$infopic['Chemin'];
-            if($chemin == null){
+            $chemin=$infopic['Chemin'];    
+            if(empty($chemin)){               
                 $chemin='images\Profil\user-icon.png';
             }
             $_SESSION['pic']=$chemin;
@@ -61,7 +61,7 @@ $requete2->CloseCursor();
     <link rel="stylesheet" href="css/accueil.css">
 </head>
 <body>
- <?php echo $_SESSION['pic']; ?>
+
   <nav class="navbar justify-content-between" style="background-color:#0D0C0C;">
   <a class="navbar-brand sticky-top">VShare</a>
   <form method="POST" action="deconnexion.php" class="form-inline">

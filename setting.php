@@ -8,8 +8,7 @@ if(isset($_POST['newnom']) && !empty($_POST['newnom'])){
     $nom_requete->bindParam(':id',$_SESSION['id']); 
     $nom_requete->execute();
     $_SESSION['nom']=$newnom;
-    header('Location: setting.php');
-    
+    header('Location: setting.php');   
 }
 
 if(isset($_POST['newprenom']) && !empty($_POST['newprenom'])){
@@ -133,15 +132,17 @@ if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
         <div class="ui top attached tabular menu">
           <a class="item active" data-tab="first">Mon profil</a>
           <a class="item" data-tab="second">Coordonnée</a>
-          <a class="item" data-tab="third">Contact</a>
+          <a class="item" data-tab="third">Gestion du compte</a>
         </div>
         <div class="ui bottom attached tab segment active" data-tab="first">
             <div class="ui equal width aligned grid">
               <div class="row">
                 <div class="column my-img">
                 <form method="POST" enctype="multipart/form-data">
-                  <img class="ui small circular image imgclick" src="<?php echo $_SESSION['pic'];?>" 0le="z-index:1000;">
-                  <input type="file" name="ownimage" id="upload-photo" />
+                  <img class="ui small circular image imgclick" src="<?php echo $_SESSION['pic'];?>">
+                  <input id="file" type="file" name="ownimage" id="upload-photo" />
+                  <label for="file">Placer une photo</label>
+                  
                   <br>
                   <button class="ui primary button centered" type="submit">Modifier photo</button>
                 </form>
@@ -207,7 +208,24 @@ if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
                              </td>
                          </tr>
                      </table>
-                        
+                    </div>
+
+                      </div>
+                      <div class="fields">
+                        <div class="field">
+                          <label>Numèro de téléphone</label>
+                          <input type="text"  name="numberphone" style="color:black">
+                        </div>
+
+                      </div>
+                     <div class="fields">
+                        <div class="field">
+                          <label>Modifier le mot de passe ?</label>
+                          <input type="password"  name="pass1" style="color:black">
+                        </div>
+                        <div class="field">
+                          <label>Tapez une seconde fois:</label>
+                          <input type="password" name= "pass2" style="color:black">
                         </div>
                       </div>
                       <button class="ui green button centered" type="submit">Modifier</button>
@@ -223,16 +241,13 @@ if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
             <form class = "ui form coord" method="POST">
             <div class="ui equal width center aligned padded grid">
               <div class="row">
-                <div class="column">
-                      
+                <div class="column">       
                        <label>Adresse:</label>
                         <input type="text" placeholder="Adresse" name="adresse" value="<?php echo $_SESSION['adresse'];?>">
                         <label>Code Postal:</label>
                         <input type="text" placeholder="Code postal" name="postal" value="<?php echo $_SESSION['postal']; ?>">
                         <label>Ville:</label> 
-                        <input type="text" placeholder="Ville" name ="ville" value="<?php echo $_SESSION['ville']; ?>">  
-                              
-                       
+                        <input type="text" placeholder="Ville" name ="ville" value="<?php echo $_SESSION['ville']; ?>">    
                 </div>
                 <div class="column left-coord">
                    <button class="ui green button" type="submit">Modifier</button>  
@@ -242,7 +257,7 @@ if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
        </form> 
         </div>
         <div class="ui bottom attached tab segment" data-tab="third">
-          Third
+          Supprimer mon compte ?
         </div>
    </div>
 

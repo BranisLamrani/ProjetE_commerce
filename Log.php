@@ -139,7 +139,7 @@ if($verifymail['mailcompt'] == 0){
   
 
 <nav class="navbar justify-content-between" style="background-color:#0D0C0C;">
-  <a class="navbar-brand sticky-top">Navbar</a>
+  <a class="navbar-brand sticky-top">VShare</a>
   <form method="POST" action="Log.php" class="form-inline">
     <input class="form-control mr-sm-2" type="text" placeholder="Email" name="mail" aria-label="Email">
     <input class="form-control mr-sm-2" type="password" placeholder="Mot de passe" name="password" aria-label="Mot de passe">
@@ -171,6 +171,7 @@ if($verifymail['mailcompt'] == 0){
 
 <!-- Semantic UI-->    
 <script src="framework/semantic/dist/semantic.min.js"></script>
+
 <script>
 $('.ui.basic.modal')
   .modal('show')
@@ -178,7 +179,6 @@ $('.ui.basic.modal')
 </script>
 
 <script>
-    
     $('.ui.modal.form')
   .modal('attach events','.formbtn','show')
 ;

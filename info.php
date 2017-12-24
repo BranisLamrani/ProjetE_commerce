@@ -1,11 +1,29 @@
 <?php 
 session_start();
 include 'includes/connexionBDD.php';
-$requete=$dbh->prepare('SELECT * from utilisateurs WHERE ID=:ID');
-$requete->bindParam(':ID',$_SESSION['id'] ,PDO::PARAM_INT);
+$requete=$dbh->prepare('SELECT * from vehicule WHERE ID=:ID');
+$requete->bindParam(':ID',$_GET['id'] ,PDO::PARAM_INT);
 $requete->execute();
-$infouser=$requete->fetch();
-      ?>
+$infocar=$requete->fetch();     
+$couleur='Pas indiqué';
+if($infocar['couleur'] != null ){
+    $couleur=$infocar['couleur'];
+}
+$place='Pas indiqué';
+if($infocar['place'] != null ){
+    $place=$infocar['couleur'];
+}
+$kmpar='Pas indiqué';
+if($infocar['kmparcouru'] != null ){
+    $kmpar=$infocar['kmparcouru'];
+}
+
+$requete2=$dbh->prepare('SELECT * from utilisateurs WHERE ID=:ID');
+$requete2->bindParam(':ID',$infocar['IDuser'],PDO::PARAM_INT);
+$requete2->execute();
+$user=$requete2->fetch();
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,10 +75,65 @@ $infouser=$requete->fetch();
           <hr> 
           </div>
      </div>
-           <div class="contenu box">
-                 
+     
+<div class="ui equal width center aligned padded grid">
+   <div class="row" style="background-color: darkgrey;color: #FFFFFF;">
+    <div class=" column">
+      <img class="ui medium image" src=" <?php echo $infocar['image'] ?> ">
+    </div>
+    <div class=" column">
+      Appartient à <?php echo $user['nom'].' '.$user['prenom']; ?>
+      <br>
+      <?php echo 'Description:'.$infocar['description'] ?>
+    </div>
+  </div>
+  <div class="row" style="background-color: darkgrey;color: #FFFFFF;">
+    <div class="column">
+                           
+    </div>
+  </div>
+  <table class="ui inverted red table">
+  <thead>
+    <tr><th>Matricule</th>
+    <th>Marque</th>
+    <th>Modèle</th>
+    <th>Couleur</th>
+    <th>Prix</th>
+    <th>Catégorie</th>
+    <th>Localisation</th>
+    <th>Place</th>
+    <th>Km Parcouru</th>
+  </tr>
+   </thead><tbody>
+    <tr>
+      <td> <?php echo $infocar['matricule'];?> </td>
+      <td><?php echo $infocar['marque'];?></td>
+      <td><?php echo $infocar['modele'];?></td>
+      <td><?php echo $couleur; ?></td>
+      <td><?php echo ' '.$infocar['prixheure'];?></td>
+      <td><?php echo $infocar['categorie'];?></td>
+      <td><?php echo $infocar['localisation'];?></td>
+      <td><?php echo $place ;?></td>
+      <td><?php echo $kmpar;?></td>
+    </tr>
+  </tbody>
+</table>
+
+   <div class="row" style="background-color: darkgrey;color: #FFFFFF;">
+    <div class=" black column">
+      Supprimer
+    </div>
+    <div class=" olive column">
+      Modifier
+
+    </div>
+  </div>
+
+
+</div>
+
                     
-           </div> 
+
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
  <!--Bootstrap-->
@@ -73,3 +146,9 @@ $infouser=$requete->fetch();
 
 </body>
 </html>
+
+
+<?php 
+$requete-> CloseCursor();
+$requete2-> CloseCursor();
+?>

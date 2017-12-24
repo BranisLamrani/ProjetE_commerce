@@ -1,6 +1,5 @@
-<head>
-    <link rel="stylesheet" href="css/putvehicule.css">
-</head>
+   <link rel="stylesheet" href="css/putvehicule.css">
+
 <?php
 $matricule='';
 $modele='';
@@ -10,6 +9,8 @@ $prix='';
 $categorie='';
 $chemin_file='';
 $description='';
+$kmparcouru='';
+$place='';
 $Errormessage='';
 if(!empty($_POST)){
     include 'includes/connexionBDD.php';
@@ -43,11 +44,16 @@ if(!empty($_POST)){
                 $couleur.=strtolower($tabcouleur[$i]);
             }
         
-        
+            $kmparcouru='';
+            $place=$_POST['place'];
+            $kmparcouru=$_POST['kmparcouru'];
             $modele=$_POST['modele'];
             $modele=strtoupper($modele);
         
             $prix=$_POST['prix'];
+            if(!empty($_POST['kmparcouru'])){
+                $kmparcouru=$_POST['kmparcouru'];
+            }
         
             $localisation=$_POST['localisation'];
             $tablocalisation=str_split($localisation);
@@ -58,8 +64,8 @@ if(!empty($_POST)){
             $categorie=$_POST['categorie'];
             $description=$_POST['description'];
             
-            $requete= $dbh->prepare('INSERT INTO vehicule(matricule,marque,modele,couleur,prixheure,localisation,image,categorie,IDuser,description) 
-                                      VALUES(:matricule,:marque,:modele,:couleur,:prix,:localisation,:image,:categorie,:IDuser,:description)');
+            $requete= $dbh->prepare('INSERT INTO vehicule(matricule,marque,modele,couleur,prixheure,localisation,image,categorie,IDuser,description,:kmparcouru,:place) 
+                                      VALUES(:matricule,:marque,:modele,:couleur,:prix,:localisation,:image,:categorie,:IDuser,:description,:kmparcouru,:place)');
             $requete->execute(array(
                 'matricule' => $matricule,
                 'marque' => $marque,
@@ -70,7 +76,9 @@ if(!empty($_POST)){
                 'image' => $chemin_file,
                 'categorie' => $categorie,
                 'IDuser'=>$_SESSION['id'],
-                ':description'=>$description
+                ':description'=>$description,
+                ':kmparcouru'=> $kmparcouru,
+                ':place'=> $place
             ));
             $requete->closeCursor();
     }
@@ -140,6 +148,27 @@ if(!empty($_POST)){
             <label>Description</label>
       <textarea name="description" rows="2"></textarea>
         </div>
+        <div class="two fields">
+          <div class="field">
+            <label>Km parcouru</label>
+            <input placeholder="Marque" name="kmparcouru" type="text">
+          </div>
+          <div class="field">
+            <label>Place</label>
+                <div id="place" class="ui selection dropdown" >
+                  <input name="place" type="hidden">
+                  <i class="dropdown icon"></i>
+                  <div class="default text">Nombre de places</div>
+                  <div class="menu">
+                    <div class="item" data-value="2">2</div>
+                    <div class="item" data-value="4">4</div>
+                    <div class="item" data-value="5">5</div>
+                    <div class="item" data-value="7">7</div>
+
+                  </div>
+                </div>
+          </div>
+        </div>
         <div class="ui primary submit button">Valider</div>
         <div class="ui error message"></div>
     </form>
@@ -205,6 +234,15 @@ if(!empty($_POST)){
           },
         ]
       },
+      Place: {
+        identifier: 'place',
+        rules: [
+          {
+            type   : 'integer',
+            prompt : 'Nombre de place ?'
+          },
+        ]
+      },
       Photo: {
         identifier: 'image',
         rules: [
@@ -223,5 +261,9 @@ if(!empty($_POST)){
   $('#categorie')
     .dropdown()
   ;
+  $('#place')
+    .dropdown()
+  ;
 </script>
+
  

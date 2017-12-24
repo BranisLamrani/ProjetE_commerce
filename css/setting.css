@@ -41,7 +41,7 @@ hr{
 }
 .contenu{
     width:70%;
-    height:55vh;
+    height:80vh;
     z-index:1;
     overflow-x: hidden;
     position: relative;
@@ -64,6 +64,7 @@ hr{
     position: relative;
     right: 15%;
     top:5%;
+
 }
 .birth{
     position: relative;
@@ -82,4 +83,18 @@ hr{
    left:5%;    
     bottom:5%;
    z-index: 0;
+}
+
+input[type="file"] {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+input[type="file"] + label {
+  border: 1px solid rgba(0,0,0,.2);
+  padding: 3px;
+    position: relative;
+    left:2%;
+  background: lavender;
 }

@@ -1,9 +1,10 @@
 <?php 
 session_start();
+
 if(isset($_POST['newnom']) && !empty($_POST['newnom'])){
     include 'includes/connexionBDD.php';
     $newnom = $_POST['newnom'];
-    $nom_requete = $dbh ->prepare('UPDATE utilisateurs SET nom=:nom WHERE id=:id');
+    $nom_requete = $dbh ->prepare('UPDATE utilisateurs SET nom=:nom WHERE ID=:id');
     $nom_requete->bindParam(':nom',$newnom);
     $nom_requete->bindParam(':id',$_SESSION['id']); 
     $nom_requete->execute();
@@ -14,7 +15,7 @@ if(isset($_POST['newnom']) && !empty($_POST['newnom'])){
 if(isset($_POST['newprenom']) && !empty($_POST['newprenom'])){
     include 'includes/connexionBDD.php';
     $newprenom = $_POST['newprenom'];
-    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET prenom=:prenom WHERE id=:id');
+    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET prenom=:prenom WHERE ID=:id');
     $pre_requete->bindParam(':prenom',$newprenom);
     $pre_requete->bindParam(':id',$_SESSION['id']); 
     $pre_requete->execute();
@@ -28,7 +29,7 @@ if(isset($_POST['jour']) && !empty($_POST['jour'])||isset($_POST['mois']) && !em
     $newmois = $_POST['mois'];
     $newannee = $_POST['annee'];
     $birth=$newjour.';'.$newmois.';'.$newannee;
-    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET birth=:birth WHERE id=:id');
+    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET birth=:birth WHERE ID=:id');
     $pre_requete->bindParam(':birth',$birth);
     $pre_requete->bindParam(':id',$_SESSION['id']); 
     $pre_requete->execute();
@@ -38,7 +39,7 @@ if(isset($_POST['jour']) && !empty($_POST['jour'])||isset($_POST['mois']) && !em
 if(isset($_POST['newprenom']) && !empty($_POST['newprenom'])){
     include 'includes/connexionBDD.php';
     $newprenom = $_POST['newprenom'];
-    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET prenom=:prenom WHERE id=:id');
+    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET prenom=:prenom WHERE ID=:id');
     $pre_requete->bindParam(':prenom',$newprenom);
     $pre_requete->bindParam(':id',$_SESSION['id']); 
     $pre_requete->execute();
@@ -54,7 +55,7 @@ if(isset($_POST['adresse']) && !empty($_POST['adresse'])){
                     $_SESSION['postal'] = $_POST['postal'];
                     $_SESSION['ville'] = $_POST['ville'];
                     $coord=$_SESSION['adresse'].";". $_SESSION['postal'].";".$_SESSION['ville'];
-                    $requete = $dbh ->prepare('UPDATE utilisateurs SET coordonnee=:coord WHERE id=:id');
+                    $requete = $dbh ->prepare('UPDATE utilisateurs SET coordonnee=:coord WHERE ID=:id');
                     $requete->bindParam(':coord',$coord);
                     $requete->bindParam(':id',$_SESSION['id']); 
                     $requete->execute();
@@ -66,6 +67,16 @@ if(isset($_POST['adresse']) && !empty($_POST['adresse'])){
 
 if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
     include 'upload_image.php';
+}
+if(!empty($_POST['numberphone'])){
+    include 'includes/connexionBDD.php';
+    $number =$_POST['numberphone'];
+    $pre_requete = $dbh ->prepare('UPDATE utilisateurs SET contact=:number WHERE ID=:id');
+    $pre_requete->bindParam(':number',$number);
+    $pre_requete->bindParam(':id',$_SESSION['id']); 
+    $pre_requete->execute();
+    $_SESSION['contact']=$number;
+    header('Location: setting.php');     
 }
 
 ?>
@@ -105,7 +116,16 @@ if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Déconnexion</button>
   </form>
 </nav>
+<?php 
+    
+    if(!empty($_GET['pass'])){
+    if(!empty($_POST['passc'])){
+        echo "ça marche";
+    }
+}
 
+   
+    ?>
       <div class="mymenu box">
           <img class="ui small centered circular image" src="<?php echo $_SESSION['pic'];?>" style="z-index:1000;">
           <br>
@@ -116,6 +136,9 @@ if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
           <br>
         
           <div class="liens">
+                         <a href="accueil.php"><img src="images/icone/home.png"></a><br>
+              <span>Accueil</span>
+          <hr>
 
              <a href="mycar.php"><img src="images/icone/sports-car.png"></a><br>
               <span>Vos véhicules</span>
@@ -148,9 +171,11 @@ if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
                 </form>
                 </div>
                 <div class="column profil">
-                    <form method="POST">
+                    
                     <div class="ui form">
+                     <form method="POST">
                       <div class="fields">
+                       
                         <div class="field">
                           <label>Nom:</label>
                           <input type="text"  name="newnom" style="color:black" value="<?php echo $_SESSION['nom']; ?>">
@@ -159,6 +184,7 @@ if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
                           <label>Prénom:</label>
                           <input type="text" name= "newprenom" style="color:black" value="<?php echo $_SESSION['prenom'];?>">
                         </div>
+                        
                       </div>
                       <div class="fields birth">    
                         <div class="field">
@@ -214,24 +240,25 @@ if(isset($_FILES['ownimage']) && !empty($_FILES['ownimage'])){
                       <div class="fields">
                         <div class="field">
                           <label>Numèro de téléphone</label>
-                          <input type="text"  name="numberphone" style="color:black">
+                          <input type="text"  name="numberphone" value="<?php echo $_SESSION['contact']; ?>">
                         </div>
 
                       </div>
                      <div class="fields">
+                       
                         <div class="field">
                           <label>Modifier le mot de passe ?</label>
-                          <input type="password"  name="pass1" style="color:black">
+                          <input type="password"  name="pass" >
                         </div>
                         <div class="field">
                           <label>Tapez une seconde fois:</label>
-                          <input type="password" name= "pass2" style="color:black">
+                          <input type="password" name= "passc">
                         </div>
                       </div>
                       <button class="ui green button centered" type="submit">Modifier</button>
-                      
+                      </form>
                     </div>
-                    </form>
+                    
                     <br>
                 </div>
               </div>

@@ -129,7 +129,6 @@ if(!empty($_POST)){
                   <div class="menu">
                     <div class="item" data-value="Citadine">Citadine</div>
                     <div class="item" data-value="Utilitaire">Utilitaire</div>
-                    <div class="item" data-value="Utilitaire">Utilitaire</div>
                     <div class="item" data-value="Coupé">Coupé</div>
                     <div class="item" data-value="4x4">4x4</div>
                     <div class="item" data-value="Familliale">Familliale</div>

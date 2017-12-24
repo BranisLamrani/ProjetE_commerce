@@ -37,7 +37,6 @@ $requete2->CloseCursor();
         //MON PANIER
         $_SESSION['panier']=array();
 
-
       ?>
 
 <!DOCTYPE html>
@@ -79,6 +78,9 @@ $requete2->CloseCursor();
           <br>
         
           <div class="liens">
+          <a href="accueil.php"><img src="images/icone/home.png"></a><br>
+              <span>Accueil</span>
+          <hr>
 
              <a href="mycar.php"><img src="images/icone/sports-car.png"></a><br>
               <span>Vos véhicules</span>

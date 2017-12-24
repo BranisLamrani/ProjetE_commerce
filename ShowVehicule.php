@@ -47,7 +47,7 @@ $requete = $dbh->query('SELECT * FROM vehicule');
                     <p><?php echo $infocar['description'];?></p>
                   </div>
                    <div class="extra">
-                    <a href="<?php echo 'info.php?id='.$infocar['ID']; ?>">
+                    <a href="<?php echo 'infocar.php?id='.$infocar['ID']; ?>">
                      <div class="ui right floated primary button" >
                           Info <i class="right chevron icon"></i> 
                      </div>

@@ -1,6 +1,6 @@
 <?php 
 session_start();
- ?>
+      ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,10 +21,9 @@ session_start();
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Page d'accueil</title>
     <link rel="stylesheet" href="css/accueil.css">
-    <link rel="stylesheet" href="css/putvehicule.css">
-    <link rel="stylesheet" href="css/owncar.css">
 </head>
 <body>
+
   <nav class="navbar justify-content-between" style="background-color:#0D0C0C;">
   <a class="navbar-brand sticky-top">VShare</a>
   <form method="POST" action="deconnexion.php" class="form-inline">
@@ -42,7 +41,7 @@ session_start();
           <br>
         
           <div class="liens">
-          <a href="accueil.php"><img src="images/icone/home.png"></a><br>
+            <a href="accueil.php"><img src="images/icone/home.png"></a><br>
               <span>Accueil</span>
           <hr>
              <a href="mycar.php"><img src="images/icone/sports-car.png"></a><br>
@@ -56,22 +55,64 @@ session_start();
           <hr> 
           </div>
      </div>
-     
-<div class="ui equal width center aligned padded grid">
-    <div class="ui top attached tabular menu" >
-      <a class=" active item" data-tab="first">Mettre à louer</a>
-      <a class="  item" data-tab="second">Mes véhicules en location</a>
+          
+           <div class="contenu box" style="overflow-y:hidden;">    
+                    
+                    <?php
+                    
+                        for($i=0;$i<count($_SESSION['panier']);$i++){
+                             
+include 'includes/connexionBDD.php';
+$requete = $dbh->prepare('SELECT * FROM vehicule WHERE id=:id');
+$requete->bindParam(':id',$_SESSION[$i]);
+$requete->execute();
+$infocar=$requete->fetch();
+?>        
+            <div class="ui divided items">
+              <div class="item">
+                <div class="image">
+                  <img src="<?php echo $infocar['image'];?>" style="height: 150px;width: 160px;">
+                </div>
+                <div class="content">
+                  <a class="header"><?php echo $infocar['marque'];?></a>
+                  <div class="meta">
+                    <span class="cinema"><?php echo 'Modèle: '.$infocar['modele'];?></span>
+                  </div>
 
-    </div>
-    <div class="ui bottom attached active tab segment" data-tab="first">
-            <?php include'PutVehicule.php' ;?>
-    </div>
-    <div class="ui bottom attached tab segment put-ve" data-tab="second">
-            <?php include'owncar.php' ;?>
-    </div>
-</div>
+                              <div class="extra">
+                                <div class="ui label">
+                                <?php 
+                                if($infocar['categorie']!=null)
+                                {
+                                    echo 'Catégorie: '.$infocar['categorie'];
+                                }
+                                else{
+                                    echo 'Catégorie: ---';
+                                } 
+                                    ?></div>
 
-
+                              </div>
+                                   <div class="description">
+                    <p><?php echo $infocar['description'];?></p>
+                  </div>
+                   <div class="extra">
+                    </div>
+                </div>
+              </div>
+              <hr class="carligne">
+            </div>
+           
+            <?php
+        }
+        $requete->closeCursor(); // Termine le traitement de la requête
+        ?>
+                        }
+               
+               
+               
+               
+               ?>
+           </div> 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
  <!--Bootstrap-->
  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
@@ -80,22 +121,6 @@ session_start();
 <!-- Semantic UI-->    
 <script src="framework/semantic/dist/semantic.min.js"></script>
 
-<script>
-$('.menu .item')
-  .tab()
-;    
-</script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-

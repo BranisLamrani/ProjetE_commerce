@@ -1,6 +1,38 @@
 <?php 
 session_start();
- ?>
+include 'includes/connexionBDD.php';
+$requete=$dbh->prepare('SELECT * from vehicule WHERE ID=:ID');
+$requete->bindParam(':ID',$_GET['id'] ,PDO::PARAM_INT);
+$requete->execute();
+$infocar=$requete->fetch();     
+$couleur='Pas indiqué';
+if($infocar['couleur'] != null ){
+    $couleur=$infocar['couleur'];
+}
+$place='Pas indiqué';
+if($infocar['place'] != null ){
+    $place=$infocar['couleur'];
+}
+$kmpar='Pas indiqué';
+if($infocar['kmparcouru'] != null ){
+    $kmpar=$infocar['kmparcouru'];
+}
+
+$requete2=$dbh->prepare('SELECT * from utilisateurs WHERE ID=:ID');
+$requete2->bindParam(':ID',$infocar['IDuser'],PDO::PARAM_INT);
+$requete2->execute();
+$user=$requete2->fetch();
+
+if(isset($_POST['choix']) && $_POST['choix'] == "delete" ){
+    $requete=$dbh->prepare('DELETE FROM vehicule WHERE ID=:ID');
+    $requete->bindParam(':ID',$_GET['id']);
+    $requete->execute();
+    header('Location: accueil.php');
+}
+if(isset($_POST['choix']) && $_POST['choix'] == "modify"){
+    echo"modify";
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,8 +53,7 @@ session_start();
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Page d'accueil</title>
     <link rel="stylesheet" href="css/accueil.css">
-    <link rel="stylesheet" href="css/putvehicule.css">
-    <link rel="stylesheet" href="css/owncar.css">
+    <link rel="stylesheet" href="css/info.css">
 </head>
 <body>
   <nav class="navbar justify-content-between" style="background-color:#0D0C0C;">
@@ -42,9 +73,7 @@ session_start();
           <br>
         
           <div class="liens">
-          <a href="accueil.php"><img src="images/icone/home.png"></a><br>
-              <span>Accueil</span>
-          <hr>
+
              <a href="mycar.php"><img src="images/icone/sports-car.png"></a><br>
               <span>Vos véhicules</span>
           <hr>
@@ -58,18 +87,46 @@ session_start();
      </div>
      
 <div class="ui equal width center aligned padded grid">
-    <div class="ui top attached tabular menu" >
-      <a class=" active item" data-tab="first">Mettre à louer</a>
-      <a class="  item" data-tab="second">Mes véhicules en location</a>
-
+   <div class="row" style="background-color: #191919;color: #FFFFFF;">
+    <div class=" column">
+      <img class="ui medium image" src=" <?php echo $infocar['image'] ?> ">
     </div>
-    <div class="ui bottom attached active tab segment" data-tab="first">
-            <?php include'PutVehicule.php' ;?>
+    <div class=" column describ">
+      Appartient à <?php echo $user['nom']?> <?php echo $user['prenom']; ?>
+      <br>
+      <?php echo 'Description:'.$infocar['description'] ?>
     </div>
-    <div class="ui bottom attached tab segment put-ve" data-tab="second">
-            <?php include'owncar.php' ;?>
-    </div>
+    <div class="column"><img class="ui centered circular image" src="<?php echo $_SESSION['pic'];?>" style="position:relative;top:10%;"></div>
+  </div>
+  <table class="ui inverted red table">
+  <thead>
+    <tr><th>Matricule</th>
+    <th>Marque</th>
+    <th>Modèle</th>
+    <th>Couleur</th>
+    <th>Prix</th>
+    <th>Catégorie</th>
+    <th>Localisation</th>
+    <th>Place</th>
+    <th>Km Parcouru</th>
+  </tr>
+   </thead><tbody>
+    <tr>
+      <td> <?php echo $infocar['matricule'];?> </td>
+      <td><?php echo $infocar['marque'];?></td>
+      <td><?php echo $infocar['modele'];?></td>
+      <td><?php echo $couleur; ?></td>
+      <td><?php echo ' '.$infocar['prixheure'];?></td>
+      <td><?php echo $infocar['categorie'];?></td>
+      <td><?php echo $infocar['localisation'];?></td>
+      <td><?php echo $place ;?></td>
+      <td><?php echo $kmpar;?></td>
+    </tr>
+  </tbody>
+</table>
 </div>
+
+                    
 
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>  
@@ -80,22 +137,12 @@ session_start();
 <!-- Semantic UI-->    
 <script src="framework/semantic/dist/semantic.min.js"></script>
 
-<script>
-$('.menu .item')
-  .tab()
-;    
-</script>
+
 </body>
 </html>
 
 
-
-
-
-
-
-
-
-
-
-
+<?php 
+$requete-> CloseCursor();
+$requete2-> CloseCursor();
+?>
